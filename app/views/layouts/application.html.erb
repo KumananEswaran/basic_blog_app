@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Blog" %></title>
+    <title><%= content_for(:title) || "The Daily Blog" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Blog">
@@ -23,8 +23,30 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto flex">
+  <body class="bg-gray-100">
+    <main class="container mx-auto">
+      <%= render "shared/navbar" %>
+      <% flash.each do |type, message| %>
+        <div data-behavior="flash" class="mx-4 my-4 p-3 rounded border <%= type == 'notice' ? 'bg-green-100' : 'bg-red-100' %>">
+          <%= message %>
+        </div>
+      <% end %>
+
+      <script>
+        (function () {
+          function hideFlashes() {
+            document.querySelectorAll('[data-behavior="flash"]').forEach(function(el) {
+              setTimeout(function() {
+                el.style.transition = 'opacity 500ms ease';
+                el.style.opacity = '0';
+                setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 500);
+              }, 3000);
+            });
+          }
+          document.addEventListener('turbo:load', hideFlashes);
+          document.addEventListener('DOMContentLoaded', hideFlashes);
+        })();
+      </script>
       <%= yield %>
     </main>
   </body>

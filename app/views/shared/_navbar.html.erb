@@ -1,0 +1,16 @@
+  <nav class="flex justify-between items-center px-8 py-4 bg-indigo-600 text-white shadow-md">
+    <h1 class="text-2xl font-bold">The Daily Blog</h1>
+    <div class="space-x-4">
+      <%= link_to "Home", root_path, class: "hover:text-blue-200 font-medium transition" %>
+      <% if user_signed_in? %>
+        <span class="mr-2"><%= current_user.username %></span>
+          <%= button_to "Log out", destroy_user_session_path,
+              method: :delete,
+              form_class: "inline",
+              class: "hover:text-blue-200 font-medium transition bg-transparent border-0 p-0 cursor-pointer" %>
+      <% else %>
+        <%= link_to "Log In", new_user_session_path, class: "hover:text-blue-200 font-medium transition" %>
+        <%= link_to "Register", new_user_registration_path, class: "hover:text-blue-200 font-medium transition" %>
+      <% end %>
+    </div>
+  </nav>

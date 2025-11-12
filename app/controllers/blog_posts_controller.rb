@@ -1,5 +1,5 @@
 class BlogPostsController < ApplicationController
-  before_action :set_blog_post, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
 
   # GET /blog_posts or /blog_posts.json
   def index
