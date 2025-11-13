@@ -1,0 +1,11 @@
+/* app/assets/stylesheets/blog_posts_overrides.css */
+#blog_posts > .flex-none .w-full {
+	width: 100%; /* keep images full inside card */
+}
+#blog_posts .w-full {
+	width: auto !important; /* prevents direct children with w-full from expanding the page */
+}
+/* More specific: only target top-level elements that shouldn't be full-width */
+#blog_posts > .flex-none > .w-full {
+	width: 100% !important;
+}

@@ -1,9 +1,10 @@
 class BlogPostsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, unless: :devise_controller?
+  before_action :set_blog_post, only: %i[show edit update destroy]
 
   # GET /blog_posts or /blog_posts.json
   def index
-    @blog_posts = BlogPost.all
+    @blog_posts = BlogPost.order(created_at: :desc)
   end
 
   # GET /blog_posts/1 or /blog_posts/1.json
