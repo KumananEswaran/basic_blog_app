@@ -1,16 +1,16 @@
 <% content_for :title, @blog_post.title %>
 
-<div class="max-w-3xl mx-auto mt-8">
+<div class="mx-auto mt-8" style="max-width: 896px;">
 
   <!-- Blog Banner -->
   <% if @blog_post.banner_image.attached? %>
     <div class="mb-6 rounded-xl overflow-hidden shadow-sm">
       <% if defined?(ImageProcessing) %>
         <%= image_tag @blog_post.banner_image.variant(resize_to_limit: [1200, 600]),
-            alt: @blog_post.title, class: "w-full object-cover" %>
+            alt: @blog_post.title, class: "w-full object-cover", style: "max-height: 400px;"  %>
       <% else %>
         <%= image_tag @blog_post.banner_image,
-            alt: @blog_post.title, class: "w-full object-cover" %>
+            alt: @blog_post.title, class: "w-full object-cover", style: "max-height: 400px;" %>
       <% end %>
     </div>
   <% end %>
@@ -43,7 +43,7 @@
             @blog_post,
             method: :delete,
             data: { turbo_confirm: "Are you sure?" },
-            class: "px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 text-sm font-medium shadow-sm" %>
+            class: "px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 text-sm font-medium shadow-sm cursor-pointer" %>
       </div>
     <% end %>
 

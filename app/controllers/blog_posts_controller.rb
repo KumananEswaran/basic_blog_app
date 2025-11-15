@@ -10,7 +10,25 @@ class BlogPostsController < ApplicationController
 
   # GET /blog_posts
   def index
-    @blog_posts = BlogPost.order(created_at: :desc)
+    if params[:mine].present? && user_signed_in?
+      @blog_posts = current_user.blog_posts.order(created_at: :desc)
+    elsif params[:user_id].present?
+      user = User.find_by(id: params[:user_id])
+      @blog_posts = user ? user.blog_posts.order(created_at: :desc) : BlogPost.none
+    else
+      @blog_posts = BlogPost.order(created_at: :desc)
+    end
+  end
+
+  # GET /my_posts
+  def my_posts
+    unless user_signed_in?
+      redirect_to new_user_session_path, alert: "You must sign in to view your posts."
+      return
+    end
+
+    @blog_posts = current_user.blog_posts.order(created_at: :desc)
+    render :index
   end
 
   # GET /blog_posts/:id
