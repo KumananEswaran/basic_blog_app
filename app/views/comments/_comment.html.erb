@@ -1,0 +1,36 @@
+<div id="<%= dom_id(comment) %>"
+     class="bg-white border border-gray-200 shadow-sm p-5 rounded-xl">
+
+  <div class="flex justify-between items-start mb-3">
+    <p class="font-semibold text-gray-900">
+      <%= comment.user ? comment.user.username : h(comment.name) %>
+    </p>
+    <p class="text-xs text-gray-400">
+      <%= comment.created_at&.strftime("%B %d, %Y") || "" %>
+    </p>   
+  </div>
+
+  <div class="flex justify-between mb-3">
+
+    <div>
+      <p class="text-gray-700 leading-relaxed">
+        <%= simple_format(h(comment.body)) %>
+      </p>
+    </div>
+
+    <% if comment.persisted? && comment.user == current_user %>
+      <div class="flex gap-3 ">
+        <%= link_to "Edit",
+            edit_blog_post_comment_path(comment.blog_post, comment),
+            class: "px-3 py-2 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200" %>
+
+        <%= button_to "Delete",
+            [comment.blog_post, comment],
+            method: :delete,
+            data: { turbo_confirm: "Are you sure?" },
+            class: "px-3 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-500 cursor-pointer" %>
+      </div>
+    </div>
+  <% end %>
+
+</div>

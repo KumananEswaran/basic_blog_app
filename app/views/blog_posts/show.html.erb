@@ -58,47 +58,42 @@
 
 
   <!-- Comments Section -->
-  <div class="mt-10">
-  <h2 class="text-2xl font-semibold mb-4">
-    Comments (<%= @blog_post.respond_to?(:comments) ? @blog_post.comments.count : 0 %>)
-  </h2>
+  <div class="mt-16">
 
-  <!-- List of Comments -->
-  <div class="space-y-5 mb-6">
-    <% if @blog_post.respond_to?(:comments) %>
-      <% if @blog_post.comments.any? %>
-        <% @blog_post.comments.each do |comment| %>
-          <div class="border border-gray-200 p-4 rounded-lg bg-white">
-            <p class="font-medium text-gray-900"><%= comment.name %></p>
-            <p class="text-sm text-gray-500 mb-2"><%= comment.created_at.strftime("%B %d, %Y") %></p>
-            <p class="text-gray-700"><%= comment.body %></p>
-          </div>
-        <% end %>
-      <% else %>
-        <p class="text-gray-500">No comments yet.</p>
-      <% end %>
+    <h2 class="text-2xl font-bold mb-6">
+      Comments (<%= (@comments || @blog_post.comments.where.not(id: nil)).count %>)
+    </h2>
+
+    <% comments_to_render = @comments || @blog_post.comments.where.not(id: nil) %>
+
+    <% if comments_to_render.any? %>
+      <div class="space-y-5 mb-12">
+        <%= render comments_to_render %>
+      </div>
     <% else %>
-      <p class="text-gray-500">Comments are unavailable.</p>
+      <p class="text-gray-500 italic mb-12">No comments yet. Be the first to comment!</p>
     <% end %>
-  </div>  
 
-  <!-- New Comment Form -->
-  <h3 class="text-xl font-semibold mb-3">Add a Comment</h3>
+    <!-- Add Comment Form Card -->
+    <div class="bg-white p-5 rounded-xl shadow border border-gray-200">
+      <h3 class="text-xl font-semibold mb-4">Add a Comment</h3>
 
-  <% if defined?(Comment) && @blog_post.respond_to?(:comments) %>
-  <%= form_with(model: [@blog_post, Comment.new], class: "space-y-4") do |f| %>
-    <div>
-      <%= f.label :name, class: "block font-medium mb-1" %>
-      <%= f.text_field :name, class: "w-full border-gray-300 rounded-md" %>
+      <% if @comment&.errors&.any? %>
+        <div class="mb-4 p-3 bg-red-50 border border-red-100 rounded">
+          <ul class="text-sm text-red-700">
+            <% @comment.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%= render "comments/form",
+        blog_post: @blog_post,
+        comment: @comment
+      %>
     </div>
 
-    <div>
-      <%= f.label :body, "Comment", class: "block font-medium mb-1" %>
-      <%= f.text_area :body, rows: 4, class: "w-full border-gray-300 rounded-md" %>
-    </div>
-
-    <%= f.submit "Post Comment", class: "px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-500 font-medium" %>
-    <% end %>
-  <% end %>
-
+  </div>
+          
 </div>

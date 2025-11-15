@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   get "home/index"
   devise_for :users, controllers: { registrations: 'registrations' }
-  resources :blog_posts
+  resources :blog_posts do
+    resources :comments, only: [:create, :edit, :update, :destroy]
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

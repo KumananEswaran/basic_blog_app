@@ -5,6 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :blog_posts, dependent: :nullify
+  has_many :comments, dependent: :nullify
 
   validates :username, presence: true, uniqueness: true
 end
