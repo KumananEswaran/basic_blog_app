@@ -23,6 +23,10 @@
       <%= link_to blog_post.title, blog_post_path(blog_post) %>
     </h2>
 
+    <p class="text-gray-500 text-sm mb-1">
+      <%= blog_post.user&.username || "Unknown author" %>
+    </p>
+
     <p class="text-gray-500 text-sm mb-3">
       <%= blog_post.created_at.strftime("%B %d, %Y") %>
     </p>
@@ -34,7 +38,7 @@
     <div class="mt-auto flex items-center justify-between text-sm text-gray-600 pt-3 border-t">
       <span>💬 <%= blog_post.respond_to?(:comments) ? blog_post.comments.count : 0 %> comments</span>
       <%= link_to "Read more →", blog_post_path(blog_post),
-              class: "text-blue-600 font-medium hover:underline" %>
+        class: "text-blue-600 font-medium hover:underline" %>
     </div>
   </div>
 </div>

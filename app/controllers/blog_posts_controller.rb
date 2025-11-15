@@ -1,13 +1,19 @@
 class BlogPostsController < ApplicationController
-  before_action :authenticate_user!, unless: :devise_controller?
+  # require login for actions that view or change posts
+  before_action :authenticate_user!, only: %i[index show new create edit update destroy]
+
+  # load the post before actions that need it
   before_action :set_blog_post, only: %i[show edit update destroy]
 
-  # GET /blog_posts or /blog_posts.json
+  # ensure only the owner may edit/update/destroy
+  before_action :authorize_user!, only: %i[edit update destroy]
+
+  # GET /blog_posts
   def index
     @blog_posts = BlogPost.order(created_at: :desc)
   end
 
-  # GET /blog_posts/1 or /blog_posts/1.json
+  # GET /blog_posts/:id
   def show
   end
 
@@ -16,26 +22,21 @@ class BlogPostsController < ApplicationController
     @blog_post = BlogPost.new
   end
 
-  # GET /blog_posts/1/edit
-  def edit
-  end
-
-  # POST /blog_posts or /blog_posts.json
+  # POST /blog_posts
   def create
-    @blog_post = BlogPost.new(blog_post_params)
-
-    respond_to do |format|
-      if @blog_post.save
-        format.html { redirect_to @blog_post, notice: "Blog post was successfully created." }
-        format.json { render :show, status: :created, location: @blog_post }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @blog_post.errors, status: :unprocessable_entity }
-      end
+    @blog_post = current_user.blog_posts.build(blog_post_params)
+    if @blog_post.save
+      redirect_to @blog_post, notice: "Post was successfully created."
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /blog_posts/1 or /blog_posts/1.json
+  # GET /blog_posts/:id/edit
+  def edit
+  end
+
+  # PATCH/PUT /blog_posts/:id
   def update
     respond_to do |format|
       if @blog_post.update(blog_post_params)
@@ -48,7 +49,7 @@ class BlogPostsController < ApplicationController
     end
   end
 
-  # DELETE /blog_posts/1 or /blog_posts/1.json
+  # DELETE /blog_posts/:id
   def destroy
     @blog_post.destroy!
 
@@ -59,13 +60,33 @@ class BlogPostsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_blog_post
-      @blog_post = BlogPost.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def blog_post_params
-      params.expect(blog_post: [ :title, :body, :meta_description, :meta_title, :mrta_image, :banner_image, :tags ])
+  # Use callbacks to share common setup or constraints between actions.
+  def set_blog_post
+    @blog_post = BlogPost.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def blog_post_params
+    params.require(:blog_post).permit(
+      :title,
+      :body,
+      :meta_description,
+      :meta_title,
+      :mrta_image,
+      :banner_image,
+      tags: []
+    )
+  end
+
+  def authorize_user!
+    # If you have admins who should bypass this, change condition to:
+    # unless @blog_post.user == current_user || (current_user.respond_to?(:admin?) && current_user.admin?)
+    unless @blog_post.user == current_user
+      respond_to do |format|
+        format.html { redirect_to blog_posts_path, alert: "You are not authorized to perform this action." }
+        format.json { head :forbidden }
+      end
     end
+  end
 end

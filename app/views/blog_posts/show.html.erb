@@ -17,6 +17,9 @@
 
   <!-- Title & Date -->
   <h1 class="text-4xl font-bold mb-2"><%= @blog_post.title %></h1>
+  <p class="text-gray-500 text-sm mb-1">
+    <%= @blog_post.user&.username || "Unknown author" %>
+  </p>
   <p class="text-gray-500 text-sm mb-8">
     <%= @blog_post.created_at.strftime("%B %d, %Y") %>
   </p>
@@ -27,51 +30,75 @@
   </div>
 
   <!-- Actions -->
-  <div class="flex flex-wrap gap-3 mb-12">
-    <%= link_to "Edit", edit_blog_post_path(@blog_post),
-        class: "px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium" %>
+  <div class="flex justify-between items-center mb-12">
 
-    <%= link_to "Back", blog_posts_path,
-        class: "px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium" %>
+    <!-- Left side: Edit/Delete -->
+    <% if @blog_post.user == current_user %>
+      <div class="flex gap-3">
+        <%= link_to "Edit",
+            edit_blog_post_path(@blog_post),
+            class: "px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-500 text-sm font-medium shadow-sm" %>
 
-    <%= button_to "Delete",
-        @blog_post,
-        method: :delete,
-        data: { turbo_confirm: "Are you sure?" },
-        class: "px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 text-sm font-medium" %>
+        <%= button_to "Delete",
+            @blog_post,
+            method: :delete,
+            data: { turbo_confirm: "Are you sure?" },
+            class: "px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 text-sm font-medium shadow-sm" %>
+      </div>
+    <% end %>
+
+    <!-- Right side: Back -->
+    <div>
+      <%= link_to "Back",
+          blog_posts_path,
+          class: "px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium shadow-sm" %>
+    </div>
+
   </div>
+
 
   <!-- Comments Section -->
   <div class="mt-10">
-    <h2 class="text-2xl font-semibold mb-4">Comments (<%= @blog_post.comments.count %>)</h2>
+  <h2 class="text-2xl font-semibold mb-4">
+    Comments (<%= @blog_post.respond_to?(:comments) ? @blog_post.comments.count : 0 %>)
+  </h2>
 
-    <!-- List of Comments -->
-    <div class="space-y-5 mb-6">
-      <% @blog_post.comments.each do |comment| %>
-        <div class="border border-gray-200 p-4 rounded-lg bg-white">
-          <p class="font-medium text-gray-900"><%= comment.name %></p>
-          <p class="text-sm text-gray-500 mb-2"><%= comment.created_at.strftime("%B %d, %Y") %></p>
-          <p class="text-gray-700"><%= comment.body %></p>
-        </div>
+  <!-- List of Comments -->
+  <div class="space-y-5 mb-6">
+    <% if @blog_post.respond_to?(:comments) %>
+      <% if @blog_post.comments.any? %>
+        <% @blog_post.comments.each do |comment| %>
+          <div class="border border-gray-200 p-4 rounded-lg bg-white">
+            <p class="font-medium text-gray-900"><%= comment.name %></p>
+            <p class="text-sm text-gray-500 mb-2"><%= comment.created_at.strftime("%B %d, %Y") %></p>
+            <p class="text-gray-700"><%= comment.body %></p>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="text-gray-500">No comments yet.</p>
       <% end %>
+    <% else %>
+      <p class="text-gray-500">Comments are unavailable.</p>
+    <% end %>
+  </div>  
+
+  <!-- New Comment Form -->
+  <h3 class="text-xl font-semibold mb-3">Add a Comment</h3>
+
+  <% if defined?(Comment) && @blog_post.respond_to?(:comments) %>
+  <%= form_with(model: [@blog_post, Comment.new], class: "space-y-4") do |f| %>
+    <div>
+      <%= f.label :name, class: "block font-medium mb-1" %>
+      <%= f.text_field :name, class: "w-full border-gray-300 rounded-md" %>
     </div>
 
-    <!-- New Comment Form -->
-    <h3 class="text-xl font-semibold mb-3">Add a Comment</h3>
+    <div>
+      <%= f.label :body, "Comment", class: "block font-medium mb-1" %>
+      <%= f.text_area :body, rows: 4, class: "w-full border-gray-300 rounded-md" %>
+    </div>
 
-    <%= form_with(model: [@blog_post, Comment.new], class: "space-y-4") do |f| %>
-      <div>
-        <%= f.label :name, class: "block font-medium mb-1" %>
-        <%= f.text_field :name, class: "w-full border-gray-300 rounded-md" %>
-      </div>
-
-      <div>
-        <%= f.label :body, "Comment", class: "block font-medium mb-1" %>
-        <%= f.text_area :body, rows: 4, class: "w-full border-gray-300 rounded-md" %>
-      </div>
-
-      <%= f.submit "Post Comment", class: "px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-500 font-medium" %>
+    <%= f.submit "Post Comment", class: "px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-500 font-medium" %>
     <% end %>
-  </div>
+  <% end %>
 
 </div>
