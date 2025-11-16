@@ -1,24 +1,30 @@
-# README
+# Basic Blog App
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Live demo: https://basic-blog-app-gj6e.onrender.com
 
-Things you may want to cover:
+A simple Rails blog application with user accounts, posts, and comments.
 
-* Ruby version
+## Features
 
-* System dependencies
+- Create, read, update, and delete blog posts (title, body, image).
+- Add comments to posts.
+- User authentication (register / login / logout) via Devise.
+- Image uploads via Active Storage (Cloudinary in production).
+- Tailwind CSS for styling and responsive layout.
 
-* Configuration
+## Technologies
 
-* Database creation
+- 🚂 Ruby on Rails 8
+- 💎 Ruby 3.4.x
+- 🐘 PostgreSQL
+- 🎨 Tailwind CSS
+- 🔐 Devise
 
-* Database initialization
+## Quick walkthrough
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+1. Register a new user.
+2. Login with your account.
+3. Create a new post (title, body, upload image).
+4. View the post and add a comment.
+5. Edit or delete your post.
+6. Logout.
