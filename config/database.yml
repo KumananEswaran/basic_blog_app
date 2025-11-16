@@ -1,7 +1,7 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
   <<: *default
@@ -12,9 +12,10 @@ test:
   database: blog_test
 
 production:
-  <<: *default
-  url: <%= ENV["DATABASE_URL"] %>
-  database: myapp_production
-  # Cable will use the same connection as production
+  primary:
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
+
   cable:
+    <<: *default
     url: <%= ENV["DATABASE_URL"] %>
