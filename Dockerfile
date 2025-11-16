@@ -16,11 +16,12 @@ RUN apt-get update -qq && \
         libvips \
         postgresql-client \
         nodejs \
+        npm \
         yarn \
     && ln -s /usr/lib/$(uname -m)-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# Set production environment variables and memory optimizations
+# Set production environment variables
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
@@ -32,7 +33,7 @@ ENV RAILS_ENV="production" \
 # ------------------------------
 FROM base AS build
 
-# Install packages required to build gems
+# Install build dependencies
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
         build-essential \
@@ -55,16 +56,15 @@ COPY . .
 RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
 # ------------------------------
-# Precompile Rails assets
+# Precompile assets for production
 # ------------------------------
 ARG SECRET_KEY_BASE
 ENV SECRET_KEY_BASE=$SECRET_KEY_BASE
-ENV RAILS_ENV=production
 
-# Install JS packages for assets
-RUN yarn install --check-files || true
+# Install JS dependencies for Tailwind/webpack
+RUN yarn install --check-files
 
-# Precompile assets
+# Precompile Rails assets
 RUN bin/rails assets:precompile
 
 # ------------------------------
