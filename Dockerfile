@@ -61,6 +61,9 @@ RUN bundle exec bootsnap precompile -j 1 app/ lib/
 ARG SECRET_KEY_BASE
 ENV SECRET_KEY_BASE=$SECRET_KEY_BASE
 
+# Rails 8: prevent database connection during assets precompile
+ENV DATABASE_URL=postgres://dummy:dummy@localhost/dummy
+
 # Precompile Rails assets
 RUN bin/rails assets:precompile
 
