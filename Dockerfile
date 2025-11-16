@@ -81,11 +81,9 @@ USER 1000:1000
 COPY --chown=rails:rails --from=build /usr/local/bundle /usr/local/bundle
 COPY --chown=rails:rails --from=build /rails /rails
 
-# Entrypoint to prepare DB
-ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Expose default Rails port
 EXPOSE 80
 
-# Start Rails server via Thrust
-CMD ["sh", "-c", "./bin/thrust"]
+# Use CMD to start Rails directly
+CMD ["bin/rails", "server", "-b", "0.0.0.0", "-p", "80"]
