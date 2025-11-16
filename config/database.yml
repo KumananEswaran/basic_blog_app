@@ -12,4 +12,10 @@ test:
   database: blog_test
 
 production:
+  <<: *default
   url: <%= ENV["DATABASE_URL"] %>
+  database: myapp_production
+
+  cable:
+    <<: *default
+    database: myapp_cable_production
