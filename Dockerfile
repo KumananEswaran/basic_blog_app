@@ -86,4 +86,4 @@ COPY --chown=rails:rails --from=build /rails /rails
 EXPOSE 80
 
 # Use CMD to start Rails directly
-CMD ["bin/rails", "server", "-b", "0.0.0.0", "-p", "80"]
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
