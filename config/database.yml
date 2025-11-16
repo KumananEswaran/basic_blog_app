@@ -15,7 +15,6 @@ production:
   <<: *default
   url: <%= ENV["DATABASE_URL"] %>
   database: myapp_production
-
+  # Cable will use the same connection as production
   cable:
-    <<: *default
-    database: myapp_cable_production
+    url: <%= ENV["DATABASE_URL"] %>
