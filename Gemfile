@@ -70,3 +70,7 @@ end
 gem "devise", "~> 4.9"
 
 gem "kaminari"
+
+gem "cloudinary"
+gem "activestorage-cloudinary-service"
+
