@@ -61,9 +61,6 @@ RUN bundle exec bootsnap precompile -j 1 app/ lib/
 ARG SECRET_KEY_BASE
 ENV SECRET_KEY_BASE=$SECRET_KEY_BASE
 
-# Install JS dependencies for Tailwind/webpack
-RUN yarn install
-
 # Precompile Rails assets
 RUN bin/rails assets:precompile
 
