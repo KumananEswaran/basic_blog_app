@@ -16,7 +16,7 @@ class BlogPostsController < ApplicationController
       user = User.find_by(id: params[:user_id])
       @blog_posts = user ? user.blog_posts.order(created_at: :desc) : BlogPost.none
     else
-      @blog_posts = BlogPost.order(created_at: :desc)
+      @blog_posts = BlogPost.order(created_at: :desc).page(params[:page]).per(8)
     end
   end
 
@@ -27,7 +27,7 @@ class BlogPostsController < ApplicationController
       return
     end
 
-    @blog_posts = current_user.blog_posts.order(created_at: :desc)
+    @blog_posts = current_user.blog_posts.order(created_at: :desc).page(params[:page]).per(8)
     render :index
   end
 

@@ -7,16 +7,23 @@
   
 
   <!-- Blog posts list -->
- <div id="blog_posts" class="flex flex-wrap gap-8 justify-center md:justify-start">
-  <% if @blog_posts.any? %>
-    <% @blog_posts.each do |blog_post| %>
-      <div class="flex-none w-72"> <!-- fixed card width; change to w-80/w-64 as desired -->
-        <%= render blog_post %>
-      </div>
+  <div id="blog_posts" class="flex flex-wrap gap-8 justify-center md:justify-start">
+    <% if @blog_posts.any? %>
+      <% @blog_posts.each do |blog_post| %>
+        <div class="flex-none w-72"> <!-- fixed card width; change to w-80/w-64 as desired -->
+          <%= render blog_post %>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-center my-10 text-gray-600">No blog posts found.</p>
     <% end %>
-  <% else %>
-    <p class="text-center my-10 text-gray-600">No blog posts found.</p>
-  <% end %>
-</div>
+  </div>
+
+  <div class="mt-8 mb-8 flex justify-center">
+    <div class="bg-gray-50 border border-gray-200 px-4 py-2 rounded-lg">
+      <%= paginate @blog_posts %>
+    </div>
+  </div>
+
 
 </div>
