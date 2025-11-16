@@ -88,4 +88,4 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 EXPOSE 80
 
 # Start Rails server via Thrust
-CMD ["./bin/thrust", "serve", "-b", "0.0.0.0", "-p", "80"]
+CMD ["sh", "-c", "./bin/thrust"]
