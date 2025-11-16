@@ -88,4 +88,4 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 EXPOSE 80
 
 # Start server (can be overridden)
-CMD ["./bin/thrust", "./bin/rails", "server"]
+CMD ["./bin/thrust"]
