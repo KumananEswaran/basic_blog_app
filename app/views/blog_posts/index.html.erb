@@ -1,13 +1,13 @@
 <% content_for :title, "Blog posts" %>
 
-<div">
+<div class="max-w-7xl mx-auto px-4 md:px-30">
 
   <!-- Header -->
   <h1 class="font-bold text-4xl text-center mb-8 mt-4">Blog posts</h1>
   
 
   <!-- Blog posts list -->
- <div id="blog_posts" class="flex flex-wrap gap-8 justify-center">
+ <div id="blog_posts" class="flex flex-wrap gap-8 justify-center md:justify-start">
   <% if @blog_posts.any? %>
     <% @blog_posts.each do |blog_post| %>
       <div class="flex-none w-72"> <!-- fixed card width; change to w-80/w-64 as desired -->
