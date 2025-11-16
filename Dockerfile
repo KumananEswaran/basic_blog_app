@@ -87,5 +87,5 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 # Expose default Rails port
 EXPOSE 80
 
-# Start server (can be overridden)
-CMD ["./bin/thrust"]
+# Start Rails server via Thrust
+CMD ["./bin/thrust", "serve", "-b", "0.0.0.0", "-p", "80"]
